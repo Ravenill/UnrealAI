@@ -9,18 +9,21 @@
 
 AUnrealAIPlayerController::AUnrealAIPlayerController()
 {
-	bShowMouseCursor = true;
-	DefaultMouseCursor = EMouseCursor::Crosshairs;
+	bShowMouseCursor = false;
+	DefaultMouseCursor = EMouseCursor::None;
 }
 
 void AUnrealAIPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
+	MoveWithAxis();
+}
 
-	// keep updating the destination every tick while desired
-	if (bMoveToMouseCursor)
+void AUnrealAIPlayerController::MoveWithAxis()
+{
+	if (AUnrealAICharacter* Pawn = Cast<AUnrealAICharacter>(GetPawn()))
 	{
-		MoveToMouseCursor();
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Pawn->GetActorLocation() + Pawn->GetCurrentPlayerVelocity());
 	}
 }
 
@@ -29,45 +32,13 @@ void AUnrealAIPlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AUnrealAIPlayerController::OnSetDestinationPressed);
-	InputComponent->BindAction("SetDestination", IE_Released, this, &AUnrealAIPlayerController::OnSetDestinationReleased);
+	//WSAD movement
+	InputComponent->BindAxis("MoveX", this, &AUnrealAIPlayerController::ChangePlayerXVelocity);
+	InputComponent->BindAxis("MoveY", this, &AUnrealAIPlayerController::ChangePlayerYVelocity);
 
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AUnrealAIPlayerController::MoveToTouchLocation);
 	InputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AUnrealAIPlayerController::MoveToTouchLocation);
-
-	InputComponent->BindAction("ResetVR", IE_Pressed, this, &AUnrealAIPlayerController::OnResetVR);
-}
-
-void AUnrealAIPlayerController::OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-}
-
-void AUnrealAIPlayerController::MoveToMouseCursor()
-{
-	if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
-	{
-		if (AUnrealAICharacter* MyPawn = Cast<AUnrealAICharacter>(GetPawn()))
-		{
-			if (MyPawn->GetCursorToWorld())
-			{
-				UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, MyPawn->GetCursorToWorld()->GetComponentLocation());
-			}
-		}
-	}
-	else
-	{
-		// Trace to see what is under the mouse cursor
-		FHitResult Hit;
-		GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-
-		if (Hit.bBlockingHit)
-		{
-			// We hit something, move there
-			SetNewMoveDestination(Hit.ImpactPoint);
-		}
-	}
 }
 
 void AUnrealAIPlayerController::MoveToTouchLocation(const ETouchIndex::Type FingerIndex, const FVector Location)
@@ -98,15 +69,20 @@ void AUnrealAIPlayerController::SetNewMoveDestination(const FVector DestLocation
 		}
 	}
 }
-
-void AUnrealAIPlayerController::OnSetDestinationPressed()
+void AUnrealAIPlayerController::ChangePlayerXVelocity(float AxisValue)
 {
-	// set flag to keep updating destination until released
-	bMoveToMouseCursor = true;
+	if (AUnrealAICharacter* MyPawn = Cast<AUnrealAICharacter>(GetPawn()))
+	{
+		const float Velocity = FMath::Clamp(AxisValue, -1.0f, 1.0f) * 100.0f;
+		MyPawn->SetCurrentPlayerVelocityOnXAxis(Velocity);
+	}
 }
 
-void AUnrealAIPlayerController::OnSetDestinationReleased()
+void AUnrealAIPlayerController::ChangePlayerYVelocity(float AxisValue)
 {
-	// clear flag to indicate we should stop updating the destination
-	bMoveToMouseCursor = false;
+	if (AUnrealAICharacter* MyPawn = Cast<AUnrealAICharacter>(GetPawn()))
+	{
+		const float Velocity = FMath::Clamp(AxisValue, -1.0f, 1.0f) * 100.0f;
+		MyPawn->SetCurrentPlayerVelocityOnYAxis(Velocity);
+	}
 }

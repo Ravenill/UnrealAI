@@ -22,7 +22,13 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns CursorToWorld subobject **/
-	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
+	//FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
+
+public:
+	void SetCurrentPlayerVelocityOnXAxis(float Velocity);
+	void SetCurrentPlayerVelocityOnYAxis(float Velocity);
+
+	FORCEINLINE FVector GetCurrentPlayerVelocity() const { return CurrentPlayerVelocity; }
 
 private:
 	/** Top down camera */
@@ -34,7 +40,9 @@ private:
 	class USpringArmComponent* CameraBoom;
 
 	/** A decal that projects to the cursor location. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UDecalComponent* CursorToWorld;
-};
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	//class UDecalComponent* CursorToWorld;
 
+	/** Player Velocity. */
+	FVector CurrentPlayerVelocity;
+};
