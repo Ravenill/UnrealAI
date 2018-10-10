@@ -21,9 +21,9 @@ void AUnrealAIPlayerController::PlayerTick(float DeltaTime)
 
 void AUnrealAIPlayerController::MoveWithAxis()
 {
-	if (AUnrealAICharacter* Pawn = Cast<AUnrealAICharacter>(GetPawn()))
+	if (AUnrealAICharacter* Player = Cast<AUnrealAICharacter>(GetPawn()))
 	{
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Pawn->GetActorLocation() + Pawn->GetCurrentPlayerVelocity());
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Player->GetActorLocation() + Player->GetCurrentPlayerVelocity());
 	}
 }
 
@@ -71,18 +71,18 @@ void AUnrealAIPlayerController::SetNewMoveDestination(const FVector DestLocation
 }
 void AUnrealAIPlayerController::ChangePlayerXVelocity(float AxisValue)
 {
-	if (AUnrealAICharacter* MyPawn = Cast<AUnrealAICharacter>(GetPawn()))
+	if (AUnrealAICharacter* Player = Cast<AUnrealAICharacter>(GetPawn()))
 	{
 		const float Velocity = FMath::Clamp(AxisValue, -1.0f, 1.0f) * 100.0f;
-		MyPawn->SetCurrentPlayerVelocityOnXAxis(Velocity);
+		Player->SetCurrentPlayerVelocityOnXAxis(Velocity);
 	}
 }
 
 void AUnrealAIPlayerController::ChangePlayerYVelocity(float AxisValue)
 {
-	if (AUnrealAICharacter* MyPawn = Cast<AUnrealAICharacter>(GetPawn()))
+	if (AUnrealAICharacter* Player = Cast<AUnrealAICharacter>(GetPawn()))
 	{
 		const float Velocity = FMath::Clamp(AxisValue, -1.0f, 1.0f) * 100.0f;
-		MyPawn->SetCurrentPlayerVelocityOnYAxis(Velocity);
+		Player->SetCurrentPlayerVelocityOnYAxis(Velocity);
 	}
 }
