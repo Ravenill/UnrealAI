@@ -68,4 +68,6 @@ public:
     void SetAIStatus(EAIStatus& status);
 
     void ClearDetectedPawn();
+
+    AActor* GetSeeingPawn();
 };

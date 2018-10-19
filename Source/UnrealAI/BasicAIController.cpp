@@ -69,8 +69,8 @@ void ABasicAIController::SetNoiseDetails(APawn* Instigator, const FVector& Locat
     if (Blackboard)
     {
         Blackboard->SetValueAsObject(NoiseGeneratedBy, Instigator);
-        Blackboard->SetValueAsVector(NoiseVolume, Location);
-        Blackboard->SetValueAsFloat(NoiseLocation, Volume);
+        Blackboard->SetValueAsVector(NoiseLocation, Location);
+        Blackboard->SetValueAsFloat(NoiseVolume, Volume);
     }
 }
 
@@ -80,4 +80,13 @@ void ABasicAIController::SetAIStatus(EAIStatus& status)
     {
         Blackboard->SetValueAsEnum(Status, static_cast<uint8>(status));
     }
+}
+
+AActor* ABasicAIController::GetSeeingPawn()
+{
+    if (UObject* object = Blackboard->GetValueAsObject(DetectedPawn))
+    {
+        return Cast<AActor>(object);
+    }
+    return nullptr;
 }

@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AIStatus.h"
 #include "Perception/AISenseConfig_Sight.h"
-#include "Perception/AIPerceptionComponent.h""
+#include "Perception/AIPerceptionComponent.h"
 #include "BasicAI.generated.h"
 
 UCLASS()
