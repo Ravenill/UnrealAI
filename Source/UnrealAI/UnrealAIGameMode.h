@@ -14,6 +14,3 @@ class AUnrealAIGameMode : public AGameModeBase
 public:
 	AUnrealAIGameMode();
 };
-
-
-

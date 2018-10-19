@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Engine/Classes/Components/PawnNoiseEmitterComponent.h"
 #include "UnrealAICharacter.generated.h"
 
 UCLASS(Blueprintable)
@@ -24,6 +25,10 @@ public:
 	/** Returns CursorToWorld subobject **/
 	//FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 
+    /** Noise Emitter Component **/
+    UPROPERTY(VisibleAnywhere, Category = AI)
+    class UPawnNoiseEmitterComponent* PawnNoiseEmitter;
+
 public:
 	void SetCurrentPlayerVelocityOnXAxis(float Velocity);
 	void SetCurrentPlayerVelocityOnYAxis(float Velocity);
@@ -38,10 +43,6 @@ private:
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
-
-	/** A decal that projects to the cursor location. */
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	//class UDecalComponent* CursorToWorld;
 
 	/** Player Velocity. */
 	FVector CurrentPlayerVelocity;

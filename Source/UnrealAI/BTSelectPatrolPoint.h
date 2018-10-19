@@ -16,9 +16,10 @@ class UNREALAI_API UBTSelectPatrolPoint : public UBTTaskNode
     GENERATED_BODY()
 
 private:
+    virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& ComponentOwner, uint8* NodeMemory) override;
+
+private:
     APatrolPoint * GetActualPatrolPoint(UBlackboardComponent* Blackboard) const;
     APatrolPoint* GetRandomPatrolPoint(TArray<AActor*>& AvaliblePoints, APatrolPoint* ActualPatrolPoint) const;
-    void SetKey(UBlackboardComponent* Blackboard, APatrolPoint* NewPatrolPoint) const;
-
-    virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& ComponentOwner, uint8* NodeMemory) override;
+    void SetKey(UBlackboardComponent* Blackboard, APatrolPoint* NewPatrolPoint) const;   
 };

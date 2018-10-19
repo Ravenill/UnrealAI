@@ -22,7 +22,7 @@ EBTNodeResult::Type UBTSelectPatrolPoint::ExecuteTask(UBehaviorTreeComponent & C
     return EBTNodeResult::Failed;
 }
 
-APatrolPoint * UBTSelectPatrolPoint::GetActualPatrolPoint(UBlackboardComponent* Blackboard) const
+APatrolPoint* UBTSelectPatrolPoint::GetActualPatrolPoint(UBlackboardComponent* Blackboard) const
 {
     return Cast<APatrolPoint>(Blackboard->GetValueAsObject("PatrolPoint"));
 }

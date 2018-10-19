@@ -7,6 +7,7 @@
 #include "BasicAI.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "AIStatus.h"
 #include "BasicAIController.generated.h"
 
 /**
@@ -28,7 +29,10 @@ private:
     FName DetectedPawn;
 
     UPROPERTY(EditDefaultsOnly, Category = AI)
-    FName NoiseGenereatedBy;
+    FName DetectedPawnLocation;
+
+    UPROPERTY(EditDefaultsOnly, Category = AI)
+    FName NoiseGeneratedBy;
 
     UPROPERTY(EditDefaultsOnly, Category = AI)
     FName PatrolPoint;
@@ -39,10 +43,13 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = AI)
     FName NoiseLocation;
 
-    void initializeKeys();
+    UPROPERTY(EditDefaultsOnly, Category = AI)
+    FName Status;
+
+    void InitializeKeys();
 
 private:
-    void InitializeBlackboard(ABasicAI* AI) const;
+    void InitializeAIBlackboard(ABasicAI* AI) const;
     void LoadPatrolPointsToArray();
     void StartBehaviorTree(ABasicAI* AI) const;
 
@@ -58,4 +65,7 @@ public:
 
     void SetDetectedPawn(APawn* Pawn);
     void SetNoiseDetails(APawn* Instigator, const FVector& Location, float Volume);
+    void SetAIStatus(EAIStatus& status);
+
+    void ClearDetectedPawn();
 };

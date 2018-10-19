@@ -4,25 +4,28 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "Kismet/GameplayStatics.h"
 #include "PatrolPoint.h"
+#include "GameFramework/Pawn.h"
 
 ABasicAIController::ABasicAIController()
 {
     BehaviorTree = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
     Blackboard = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComponent"));
 
-    initializeKeys();
+    InitializeKeys();
 }
 
-void ABasicAIController::initializeKeys()
+void ABasicAIController::InitializeKeys()
 {
     DetectedPawn = "DetectedPawn";
-    NoiseGenereatedBy = "NoiseGenereatedBy";
+    DetectedPawnLocation = "DetectedPawnLocation";
+    NoiseGeneratedBy = "NoiseGeneratedBy";
     PatrolPoint = "PatrolPoint";
     NoiseVolume = "NoiseVolume";
     NoiseLocation = "NoiseLocation";
+    Status = "Status";
 }
 
-void ABasicAIController::InitializeBlackboard(ABasicAI* AI) const
+void ABasicAIController::InitializeAIBlackboard(ABasicAI* AI) const
 {
     if (UBlackboardData* BlackboardData = AI->BehaviorTree->BlackboardAsset)
     {
@@ -46,7 +49,7 @@ void ABasicAIController::Possess(APawn * Pawn)
 
     if (ABasicAI* AI = Cast<ABasicAI>(Pawn))
     {
-        InitializeBlackboard(AI);
+        InitializeAIBlackboard(AI);
         LoadPatrolPointsToArray();
         StartBehaviorTree(AI);
     }
@@ -57,6 +60,7 @@ void ABasicAIController::SetDetectedPawn(APawn* Pawn)
     if (Blackboard)
     {
         Blackboard->SetValueAsObject(DetectedPawn, Pawn);
+        Blackboard->SetValueAsVector(DetectedPawnLocation, Pawn->GetActorLocation());
     }
 }
 
@@ -64,8 +68,16 @@ void ABasicAIController::SetNoiseDetails(APawn* Instigator, const FVector& Locat
 {
     if (Blackboard)
     {
-        Blackboard->SetValueAsObject(NoiseGenereatedBy, Instigator);
+        Blackboard->SetValueAsObject(NoiseGeneratedBy, Instigator);
         Blackboard->SetValueAsVector(NoiseVolume, Location);
         Blackboard->SetValueAsFloat(NoiseLocation, Volume);
+    }
+}
+
+void ABasicAIController::SetAIStatus(EAIStatus& status)
+{
+    if (Blackboard)
+    {
+        Blackboard->SetValueAsEnum(Status, static_cast<uint8>(status));
     }
 }
